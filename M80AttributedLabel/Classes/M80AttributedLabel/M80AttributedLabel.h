@@ -5,6 +5,8 @@
 //  Created by amao on 13-9-1.
 //  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
 //
+//  Modified by gzmiracle 15-09-30
+//
 
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
