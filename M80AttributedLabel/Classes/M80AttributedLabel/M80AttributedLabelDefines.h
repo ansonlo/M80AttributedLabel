@@ -16,10 +16,23 @@ typedef enum
     M80ImageAlignmentBottom
 } M80ImageAlignment;
 
+typedef NS_ENUM(NSInteger, LinkType) {
+    /** 链接 */
+    LinkType_link = 0,
+    /** 手机 */
+    LinkType_phoneNum ,
+    /** 邮箱地址 */
+    LinkType_email ,
+};
+
 @class M80AttributedLabel;
 
 @protocol M80AttributedLabelDelegate <NSObject>
+@optional
 - (void)m80AttributedLabel:(M80AttributedLabel *)label
+             clickedOnLink:(id)linkData;
+- (void)m80AttributedLabel:(M80AttributedLabel *)label
+                  linkType:(LinkType)linkType
              clickedOnLink:(id)linkData;
 
 @end

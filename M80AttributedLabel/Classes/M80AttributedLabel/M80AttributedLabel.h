@@ -5,8 +5,6 @@
 //  Created by amao on 13-9-1.
 //  Copyright (c) 2013年 www.xiangwangfeng.com. All rights reserved.
 //
-//  Modified by gzmiracle 15-09-30
-//
 
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
@@ -68,10 +66,16 @@
              forRange: (NSRange)range
             linkColor: (UIColor *)color;
 
+- (void)addCustomLink: (id)linkData
+             lingType: (LinkType)linkType
+             forRange: (NSRange)range
+            linkColor: (UIColor *)color;
 
 //大小
 - (CGSize)sizeThatFits:(CGSize)size;
 
+/** 是否点击链接 */
+- (BOOL)onLabelClickFork:(CGPoint)point;
 //设置全局的自定义Link检测Block(详见M80AttributedLabelURL)
 + (void)setCustomDetectMethod:(M80CustomDetectLinkBlock)block;
 

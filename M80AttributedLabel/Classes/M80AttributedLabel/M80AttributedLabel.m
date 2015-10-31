@@ -538,14 +538,25 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     [self addCustomLink:linkData
                forRange:range
               linkColor:self.linkColor];
-    
 }
 
 - (void)addCustomLink: (id)linkData
              forRange: (NSRange)range
             linkColor: (UIColor *)color
 {
+    [self addCustomLink:linkData
+               lingType:LinkType_link
+               forRange:range
+              linkColor:color];
+}
+
+- (void)addCustomLink: (id)linkData
+             lingType: (LinkType)linkType
+             forRange: (NSRange)range
+            linkColor: (UIColor *)color
+{
     M80AttributedLabelURL *url = [M80AttributedLabelURL urlWithLinkData:linkData
+                                                               linkType:linkType
                                                                   range:range
                                                                   color:color];
     [_linkLocations addObject:url];
@@ -947,6 +958,43 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     return NO;
 }
 
+- (BOOL)onLabelClickFork:(CGPoint)point
+{
+    M80AttributedLabelURL *labelUrl = [self urlForPoint:point];
+    id linkData = labelUrl.linkData;
+    if (linkData)
+    {
+        if (_delegate)
+        {
+            if ([_delegate respondsToSelector:@selector(m80AttributedLabel:linkType:clickedOnLink:)]) {
+                [_delegate m80AttributedLabel:self linkType:labelUrl.linkType clickedOnLink:linkData];
+            } else if ([_delegate respondsToSelector:@selector(m80AttributedLabel:clickedOnLink:)]) {
+                [_delegate m80AttributedLabel:self clickedOnLink:linkData];
+            }
+        }
+        else
+        {
+            NSURL *url = nil;
+            if ([linkData isKindOfClass:[NSString class]])
+            {
+                url = [NSURL URLWithString:linkData];
+            }
+            else if([linkData isKindOfClass:[NSURL class]])
+            {
+                url = linkData;
+            }
+            if (url)
+            {
+                [[UIApplication sharedApplication] openURL:url];
+            }
+        }
+        return YES;
+    }
+    
+    return NO;
+}
+
+
 
 #pragma mark - 链接处理
 - (void)recomputeLinksIfNeeded
@@ -1019,21 +1067,22 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
             return;
         }
     }
+//    [self addCustomLink:link.linkData
+//               forRange:link.range];
+    
     [self addCustomLink:link.linkData
-               forRange:link.range];
+               lingType:link.linkType
+               forRange:link.range
+              linkColor:self.linkColor];
 }
 
 #pragma mark - 点击事件相应
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (self.touchedLink == nil)
-    {
-        UITouch *touch = [touches anyObject];
-        CGPoint point = [touch locationInView:self];
-        self.touchedLink =  [self urlForPoint:point];
-    }
+    UITouch *touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self];
     
-    
+    self.touchedLink = [self urlForPoint:point];
     if (self.touchedLink)
     {
           [self setNeedsDisplay];
@@ -1072,7 +1121,7 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
 {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
-    if(![self onLabelClick:point])
+    if(![self onLabelClickFork:point])
     {
         [super touchesEnded:touches withEvent:event];
     }
@@ -1080,32 +1129,6 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
     {
         self.touchedLink = nil;
         [self setNeedsDisplay];
-    }
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    M80AttributedLabelURL *touchedLink = [self urlForPoint:point];
-    if (touchedLink == nil)
-    {
-        NSArray *subViews = [self subviews];
-        for (UIView *view in subViews)
-        {
-            CGPoint hitPoint = [view convertPoint:point
-                                         fromView:self];
-            
-            UIView *hitTestView = [view hitTest:hitPoint
-                                      withEvent:event];
-            if (hitTestView)
-            {
-                return hitTestView;
-            }
-        }
-        return nil;
-    }
-    else
-    {
-        return self;
     }
 }
 

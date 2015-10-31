@@ -12,10 +12,16 @@
 
 @interface M80AttributedLabelURL : NSObject
 @property (nonatomic,strong)    id      linkData;
+@property (nonatomic,assign)    LinkType linkType;
 @property (nonatomic,assign)    NSRange range;
 @property (nonatomic,strong)    UIColor *color;
 
 + (M80AttributedLabelURL *)urlWithLinkData: (id)linkData
+                                     range: (NSRange)range
+                                     color: (UIColor *)color;
+
++ (M80AttributedLabelURL *)urlWithLinkData: (id)linkData
+                                  linkType: (LinkType)linkType
                                      range: (NSRange)range
                                      color: (UIColor *)color;
 
