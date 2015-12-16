@@ -968,7 +968,8 @@ static dispatch_queue_t get_m80_attributed_label_parse_queue() \
         {
             if ([_delegate respondsToSelector:@selector(m80AttributedLabel:linkType:clickedOnLink:)]) {
                 [_delegate m80AttributedLabel:self linkType:labelUrl.linkType clickedOnLink:linkData];
-            } else if ([_delegate respondsToSelector:@selector(m80AttributedLabel:clickedOnLink:)]) {
+            }
+            if ([_delegate respondsToSelector:@selector(m80AttributedLabel:clickedOnLink:)]) {
                 [_delegate m80AttributedLabel:self clickedOnLink:linkData];
             }
         }

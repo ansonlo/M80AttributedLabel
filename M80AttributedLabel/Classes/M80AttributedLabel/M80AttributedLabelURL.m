@@ -77,16 +77,17 @@ static M80CustomDetectLinkBlock customDetectBlock = nil;
                             usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                                 NSRange range = result.range;
                                 NSString *text = [plainText substringWithRange:range];
-                                switch (linkType) {
-                                    case LinkType_phoneNum:
-                                        text = [@"tel://" stringByAppendingString:text];
-                                        break;
-                                    case LinkType_email:
-                                        text = [@"mailto://" stringByAppendingString:text];
-                                        break;
-                                    default:
-                                        break;
-                                }
+//                                switch (linkType) {
+//                                    case LinkType_link:
+//                                        text = [@"http://" stringByAppendingString:text];
+//                                        break;
+//                                    case LinkType_phoneNum:
+//                                        text = [@"tel://" stringByAppendingString:text];
+//                                        break;
+//                                    case LinkType_email:
+//                                        text = [@"mailto://" stringByAppendingString:text];
+//                                        break;
+//                                }
                                 M80AttributedLabelURL *link = [M80AttributedLabelURL urlWithLinkData:text
                                                                                             linkType:linkType
                                                                                                range:range
